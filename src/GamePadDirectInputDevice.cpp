@@ -633,7 +633,7 @@ double CDirectInputDevice::GetAxisValue( long val, int dir )
 }
 double CDirectInputDevice::GetTriggerValue( int num ) const
 {
-	if( num >= DIObj_AxisX || num <= DIObj_Slider_1 ) {
+	if( num >= DIObj_AxisX && num <= DIObj_Slider_1 ) {
 		// 同じ型で並んでいるので配列とみなして処理。スライダーも一緒
 		const LONG	*axis = &(state_.state.lX);
 		LONG	val = axis[num] + (-AXIS_RANGE_MIN);

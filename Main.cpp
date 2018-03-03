@@ -152,8 +152,8 @@ void NI_Gamepad::Update()
 		state.leftY = device_->GetLeftThumbStickY();
 		state.rightX = device_->GetRightThumbStickX();
 		state.rightY = device_->GetRightThumbStickY();
-		state.leftTrigger = device_->GetLeftThumbStickX();
-		state.rightTrigger = device_->GetLeftThumbStickX();
+		state.leftTrigger = device_->GetLeftTrigger();
+		state.rightTrigger = device_->GetRightTrigger();
 		state.keyState = device_->GetKeyState();
 		context_.Input( state );
 	}
