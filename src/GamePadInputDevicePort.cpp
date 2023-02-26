@@ -42,10 +42,16 @@
 #include <objbase.h>
 #include <comdef.h>
 #include <comutil.h>
-#include <atlbase.h>
 #include <iostream>
 #include <dinput.h>
 #include <dinputd.h>
+
+_COM_SMARTPTR_TYPEDEF(IDirectInputJoyConfig8,__uuidof(IDirectInputJoyConfig8));
+
+_COM_SMARTPTR_TYPEDEF(IWbemLocator,__uuidof(IWbemLocator));
+_COM_SMARTPTR_TYPEDEF(IWbemServices,__uuidof(IWbemServices));
+_COM_SMARTPTR_TYPEDEF(IEnumWbemClassObject,__uuidof(IEnumWbemClassObject));
+_COM_SMARTPTR_TYPEDEF(IWbemClassObject,__uuidof(IWbemClassObject));
 
 #include "GamePadInputDevicePort.h"
 #include "GamePadDLLLoader.h"
@@ -218,16 +224,16 @@ void CInputDevicePort::InitializeAllDevice( HWND hWnd )
 }
 void CInputDevicePort::InitializeDirectInput()
 {
-	if( direct_input_.p ) {
+	if( direct_input_ ) {
 		Log( L"Already Initizelized DirectInput." );
 		return;
 	}
 
 	if( dinput_dll_.IsLoaded() == false ) {
 #ifdef _DEBUG
-		dinput_dll_.Load( "dinput8d.dll" );
+		dinput_dll_.Load( TEXT("dinput8d.dll") );
 #else
-		dinput_dll_.Load( "dinput8.dll" );
+		dinput_dll_.Load( TEXT("dinput8.dll") );
 #endif
 	}
 
@@ -283,10 +289,10 @@ bool CInputDevicePort::EnumDevicesCallback( const DIDEVICEINSTANCE* pInst )
 	bool	is_preferred_device = ( is_valid_preferred_device_guid_ && IsEqualGUID( pInst->guidInstance, preferred_device_guid_ ) );
 
 	HRESULT					hr;
-	CComPtr<IDirectInputDevice8>	pDevice;
+	IDirectInputDevice8Ptr	pDevice;
 	if( SUCCEEDED(hr = direct_input_->CreateDevice( pInst->guidInstance, &pDevice, NULL )) ) {
 		IInputDevice*	device = NULL;
-		if( CGamePadDeviceInspector::IsForceFeedbackDevice( pDevice ) ) {
+		if( CGamePadDeviceInspector::IsForceFeedbackDevice( (IDirectInputDevice8*) pDevice ) ) {
 			device = new CForceFeedbackDevice( pDevice, const_cast<CInputDevicePort*>(this) );
 		} else {
 			device = new CDirectInputDevice( pDevice, const_cast<CInputDevicePort*>(this) );
@@ -342,7 +348,7 @@ void CInputDevicePort::GetPreferredDevice()
 	is_valid_preferred_device_guid_ = false;
 
 	HRESULT	hr;
-	CComPtr<IDirectInputJoyConfig8>			pJoyConfig;
+	IDirectInputJoyConfig8Ptr			pJoyConfig;
 	if( FAILED( hr = direct_input_->QueryInterface( IID_IDirectInputJoyConfig8, (void**)&pJoyConfig ) ) ) {
 		Log( L"Failed to Call QueryInterface.", hr );
 		return;
@@ -365,11 +371,11 @@ bool CInputDevicePort::FindXInputDevice()
 	    if( FAILED(hr = CoInitialize(NULL)) )
 			throw _com_error(hr);
 
-		CComPtr<IWbemLocator> pIWbemLocator;
-		if( FAILED(hr = pIWbemLocator.CoCreateInstance(__uuidof(WbemLocator), NULL, CLSCTX_INPROC_SERVER ) ) )
+		IWbemLocatorPtr pIWbemLocator;
+		if( FAILED(hr = CoCreateInstance(__uuidof(WbemLocator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IWbemLocator), (void**)&pIWbemLocator ) ) )
 			throw _com_error(hr);
 
-		CComPtr<IWbemServices> pIWbemServices;
+		IWbemServicesPtr pIWbemServices;
 		if( FAILED(hr = pIWbemLocator->ConnectServer( _bstr_t(L"\\\\.\\root\\cimv2"), NULL, NULL, 0L, 0L, NULL, NULL, &pIWbemServices )) )
 			throw _com_error(hr);
 
@@ -377,13 +383,13 @@ bool CInputDevicePort::FindXInputDevice()
 		CoSetProxyBlanket( pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, 0 );                    
 
 		// Get list of Win32_PNPEntity devices
-		CComPtr<IEnumWbemClassObject> pEnumDevices;
+		IEnumWbemClassObjectPtr pEnumDevices;
 		if( FAILED(hr = pIWbemServices->CreateInstanceEnum( _bstr_t(L"Win32_PNPEntity"), 0, NULL, &pEnumDevices ) ) )
 			throw _com_error(hr);
 
 	    for( ;; ) {
 			DWORD	uReturned = 0;
-			CComPtr<IWbemClassObject> pDevice;
+			IWbemClassObjectPtr pDevice;
 			if( FAILED(hr = pEnumDevices->Next( 10000, 1, &pDevice, &uReturned ) ) )
 				throw _com_error(hr);
 

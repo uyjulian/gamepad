@@ -92,12 +92,11 @@ void CGamePadDeviceInspector::PrintDetail()
 	std::wstringstream mesStream;
 	mesStream << L"Devie Detail :" << std::endl;
 
-	std::string	productName;
+	std::wstring	productName;
 	std::wstring	wproductName;
+	wproductName = productName;
 	GetProductName( productName );
-	if( EncodeToUTF16( wproductName, productName ) ) {
-		mesStream << L"Product Name : " << wproductName << std::endl;
-	}
+	mesStream << L"Product Name : " << wproductName << std::endl;
 	int	main, sub;
 	GetDeviceType( main, sub );
 	std::wstring mainname, subname;

@@ -65,9 +65,8 @@ bool CDirectInputDevice::EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdid
 
 	// オブジェクト名書き出し
 	std::wstring	objName;
-	if( EncodeToUTF16( objName, std::string(pdidoi->tszName) ) ) {
-		Log( (std::wstring(L"[ ") + objName + std::wstring(L" ]")).c_str() );
-	}
+	objName = std::wstring(pdidoi->tszName);
+	Log( (std::wstring(L"[ ") + objName + std::wstring(L" ]")).c_str() );
 
 	// タイプチェック
 	std::wstringstream typeStr;
@@ -407,9 +406,9 @@ bool CDirectInputDevice::InitializeDeviceDetail()
 
 	instance_guid_ = inspector_.GetInstanceGuid();
 
-	std::string name;
+	std::wstring name;
 	inspector_.GetProductName( name );
-	EncodeToUTF16( name_, name );
+	name_ = name;
 
 	std::wstringstream stream;
 	stream << L"Game Pad Device Name : " << name_;
@@ -506,7 +505,7 @@ bool CDirectInputDevice::Acquire()
 }
 void CDirectInputDevice::RecreateDevice()
 {
-	if( device_.p ) {
+	if( device_ ) {
 		device_.Release();
 		device_ = NULL;
 	}

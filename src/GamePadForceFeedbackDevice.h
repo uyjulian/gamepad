@@ -40,7 +40,7 @@ namespace gamepad {
 class CForceFeedbackDevice : public CDirectInputDevice
 {
 protected:
-	CComPtr<IDirectInputEffect>		effect_;
+	IDirectInputEffectPtr		effect_;
 
 	DWORD			rgdw_axes_[2];
 	LONG			rgl_direction_[2];

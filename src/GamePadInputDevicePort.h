@@ -38,7 +38,10 @@
 #include <vector>
 #include <list>
 #include <string>
-#include <atlbase.h>
+
+#include <comdef.h>
+_COM_SMARTPTR_TYPEDEF(IDirectInput8,__uuidof(IDirectInput8));
+
 #include "GamePadDLLLoader.h"
 #include "GamePadInputDevice.h"
 
@@ -60,7 +63,7 @@ class CInputDevicePort
 //	static const size_t NUM_OF_PORTS = 4;
 
 	static CDLLLoader			dinput_dll_;	//!< Direct Input DLL
-	CComPtr<IDirectInput8>		direct_input_;	//!< Direct Input
+	IDirectInput8Ptr		direct_input_;	//!< Direct Input
 
 	//! 仮のリストに格納する
 	void PutTempControllers( IInputDevice* device ) {

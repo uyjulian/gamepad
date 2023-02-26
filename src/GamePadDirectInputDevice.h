@@ -36,7 +36,11 @@
 #include <windows.h>
 #include <dinput.h>
 #include <string>
-#include <atlbase.h>
+
+#include <comdef.h>
+_COM_SMARTPTR_TYPEDEF(IDirectInputEffect,__uuidof(IDirectInputEffect));
+_COM_SMARTPTR_TYPEDEF(IDirectInputDevice8,__uuidof(IDirectInputDevice8));
+
 #include "GamePadInputDeviceBase.h"
 #include "GamePadDeviceInspector.h"
 
@@ -177,7 +181,7 @@ protected:
 	DirectInputObjects		enable_objs_;
 	CGamePadDeviceInspector	inspector_;
 
-	CComPtr<IDirectInputDevice8>	device_;
+	IDirectInputDevice8Ptr	device_;
 
 	WORD	vendor_id_;		//!< ベンダーID
 	WORD	product_id_;	//!< プロダクトID
