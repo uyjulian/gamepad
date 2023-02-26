@@ -11,17 +11,17 @@
 11 : Left thumb
 12 : right thumb
 
-�f�W�^���\���L�[
-�n�b�g�X�C�b�`
+デジタル十時キー
+ハットスイッチ
 
 
-Left X X��
-Left Y Y��
-Right X Z��
-Right Y Z����]
+Left X X軸
+Left Y Y軸
+Right X Z軸
+Right Y Z軸回転
 
 
-�����Ȃ��ꍇ�̓n�b�g�X�C�b�`�����Ɋ��蓖�Ă���
+軸がない場合はハットスイッチが左に割り当てられる
 
 
 
@@ -39,7 +39,7 @@ class Gamepad
 	property name : string {getter}
 	property type : int {getter}
 
-	// �A�i���O�l 0.0 �` 1.0
+	// アナログ値 0.0 〜 1.0
 	property leftTrigger : real {getter}
 	property rightTrigger : real {getter}
 	property leftThumbStickX : real {getter}
@@ -49,17 +49,17 @@ class Gamepad
 	property leftVibration : real {setter}
 	property rightVibration : real {setter}
 
-	// �{�^���̉������
+	// ボタンの押下状態
 	property keyState : int {getter}
 
-	// �G�b�W���o�p�J�E���^�l
-	// �����ꑱ���Ă��邩�ǂ��� gpTouchDown ���傫�����ǂ����Ŕ���
-	// 0 �̎� �����ꂽ�u�ԁA1�̎������ꂽ�u�ԁA������Ă��鎞�Ԃ������قǒl�͑傫���Ȃ�
-	// �܂��A������Ă��Ȃ����Ԃ������قǁA���̒l�Œl���������Ȃ�
-	// val >= gpTouchDown : ������Ă��� (�l���傫���قǒ���������Ă���
-	// val <= gpTouchNo : ������Ă��Ȃ� (�l���������قǒ���������Ă���
-	// val == gpTouchDown �����ꂽ�u��
-	// val == gpTouchLiftoff : �����ꂽ�u��
+	// エッジ検出用カウンタ値
+	// 押され続けているかどうか gpTouchDown より大きいかどうかで判定
+	// 0 の時 離された瞬間、1の時押された瞬間、押されている時間が長いほど値は大きくなる
+	// また、押されていない時間が長いほど、負の値で値が小さくなる
+	// val >= gpTouchDown : 押されている (値が大きいほど長く押されている
+	// val <= gpTouchNo : 押されていない (値が小さいほど長く離されている
+	// val == gpTouchDown 押された瞬間
+	// val == gpTouchLiftoff : 離された瞬間
 	property analogLeftUpCount : int {getter}
 	property analogLeftDownCount : int {getter}
 	property analogLeftLeftCount : int {getter}
@@ -85,7 +85,7 @@ class Gamepad
 	property buttonXCount : int {getter}
 	property buttonYCount : int {getter}
 }:
-// ��`�ςݒ萔�l
+// 定義済み定数値
 const gpDInput = 3, gpFFDInput = 2, gpXInput = 1,
 	gpButtonDpadUp = 0x00000001, gpButtonDpadDown = 0x00000002, gpButtonDpadLeft = 0x00000004,
 	gpButtonDpadRight = 0x00000008, gpButtonStart = 0x00000010, gpButtonBack = 0x00000020,
