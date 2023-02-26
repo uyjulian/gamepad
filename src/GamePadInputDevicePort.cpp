@@ -67,6 +67,7 @@ _COM_SMARTPTR_TYPEDEF(IWbemClassObject,__uuidof(IWbemClassObject));
 #pragma comment(lib, "dinput8.lib")
 #else
 
+#if 0
 #ifdef DEFINE_GUID
 #undef DEFINE_GUID
 #endif
@@ -91,6 +92,7 @@ DEFINE_GUID(GUID_Unknown, 0xA36D02F3,0xC9F3,0x11CF,0xBF,0xC7,0x44,0x45,0x53,0x54
 DEFINE_GUID(GUID_ConstantForce, 0x13541C20,0x8E33,0x11D0,0x9A,0xD0,0x00,0xA0,0xC9,0xA0,0x6E,0x35);
 
 #undef DEFINE_GUID
+#endif
 
 static DIOBJECTDATAFORMAT c_rgodfDIJoy[] = {
 	{ &GUID_XAxis, 0, DIDFT_AXIS | DIDFT_ANYINSTANCE | 0x80000000, DIDOI_ASPECTPOSITION },  

@@ -3,7 +3,7 @@ SOURCES += Main.cpp src/GamePadDeviceInspector.cpp src/GamePadDirectInputDevice.
 
 INCFLAGS += -I./src
 
-LDLIBS += -lole32 -loleaut32 -luuid
+LDLIBS += -lole32 -loleaut32 -luuid -ldxguid
 
 PROJECT_BASENAME = gamepad
 
